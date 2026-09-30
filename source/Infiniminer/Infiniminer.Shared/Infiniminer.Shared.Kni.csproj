@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>1.0.0.0</Version>
+    <Title>Infiniminer</Title>
+    <Copyright>Copyright (c) 2009 Zach Barth</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nkast.Xna.Framework" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Graphics" Version="4.2.9001" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lidgren\Lidgren.Network\Lidgren.Network.csproj" />
+    <ProjectReference Include="..\..\Lidgren\Lidgren.Network.Xna\Lidgren.Network.Xna.Kni.csproj" />
+  </ItemGroup>
+
+</Project>

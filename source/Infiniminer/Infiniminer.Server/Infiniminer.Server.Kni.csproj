@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <PublishTrimmed>True</PublishTrimmed>
+    <PublishAot>True</PublishAot>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>1.0.0.0</Version>
+    <Title>Infiniminer Server</Title>
+    <Copyright>Copyright (c) 2009 Zach Barth</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="./server.config.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="./banlist.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nkast.Xna.Framework" Version="4.2.9001.*" />
+    <PackageReference Include="nkast.Xna.Framework.Graphics" Version="4.2.9001.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Infiniminer.Shared\Infiniminer.Shared.Kni.csproj" />
+    <ProjectReference Include="..\..\Lidgren\Lidgren.Network\Lidgren.Network.csproj" />
+    <ProjectReference Include="..\..\Lidgren\Lidgren.Network.Xna\Lidgren.Network.Xna.Kni.csproj" />
+  </ItemGroup>
+
+</Project>

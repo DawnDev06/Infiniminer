@@ -1,0 +1,11 @@
+<linker>
+  <assembly fullname="Infiniminer.Client.Shared.Kni">
+    <type fullname="Infiniminer.States.ClassSelectionState" preserve="all"/>
+    <type fullname="Infiniminer.States.DebugState" preserve="all"/>
+    <type fullname="Infiniminer.States.LoadingState" preserve="all"/>
+    <type fullname="Infiniminer.States.MainGameState" preserve="all"/>
+    <type fullname="Infiniminer.States.ServerBrowserState" preserve="all"/>
+    <type fullname="Infiniminer.States.TeamSelectionState" preserve="all"/>
+    <type fullname="Infiniminer.States.TitleState" preserve="all"/>
+  </assembly>
+</linker>

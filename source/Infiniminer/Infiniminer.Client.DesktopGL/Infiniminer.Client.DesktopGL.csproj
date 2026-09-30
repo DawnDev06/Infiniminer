@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>false</TieredCompilation>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>1.0.0.0</Version>
+    <Title>Infiniminer</Title>
+    <Copyright>Copyright (c) 2009 Zach Barth</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>../Infiniminer.Client.Shared/Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Icon.ico" />
+    <None Remove="Icon.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../Infiniminer.Client.Shared/Icon.ico" LogicalName="Icon.ico" />
+    <EmbeddedResource Include="../Infiniminer.Client.Shared/Icon.bmp" LogicalName="Icon.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../Infiniminer.Client.Shared/client.config.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.2.1105" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Infiniminer.Client.Shared\Infiniminer.Client.Shared.csproj" />
+    <MonoGameContentReference Include="..\Infiniminer.Client.Shared\Content\Content.Shared.mgcb" Link="Content\Content.Shared.mgcb" />
+  </ItemGroup>
+  
+  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+    <Message Text="Restoring dotnet tools" Importance="High" />
+    <Exec Command="dotnet tool restore" />
+  </Target>
+</Project>
