@@ -264,7 +264,9 @@ namespace Infiniminer
             else if (_P.constructionGunAnimation > 0.001)
                 gunSprite = texToolBuildSmoke;
             spriteBatch.Draw(gunSprite, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
-            spriteBatch.Draw(blockIcons[blockType], new Rectangle(drawX + 37 * 3, drawY + 50 * 3, 117, 63), Color.White);
+            Texture2D blockIcon;
+            if (blockIcons.TryGetValue(blockType, out blockIcon))
+                spriteBatch.Draw(blockIcon, new Rectangle(drawX + 37 * 3, drawY + 50 * 3, 117, 63), Color.White);
         }
 
         const int VWidth = 1024;
@@ -373,7 +375,14 @@ namespace Infiniminer
                 case PlayerTools.DeconstructionGun:
                     RenderConstructionGun(graphicsDevice, spriteBatch, BlockType.None);
                     break;
-
+                case PlayerTools.WorldGun:
+                    {
+                        BlockType worldBlock = _P.GetWorldGunBlock();
+                        RenderConstructionGun(graphicsDevice, spriteBatch, worldBlock);
+                        RenderMessageCenter(spriteBatch, "WORLDGUN - " + worldBlock.ToString(),
+                                            new Vector2(vWidth / 2, vHeight - 20), Color.White, Color.Black);
+                    }
+                    break;
                 default:
                     {
                         // Draw info about what we have equipped.

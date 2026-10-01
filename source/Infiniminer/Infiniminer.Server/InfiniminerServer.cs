@@ -615,6 +615,8 @@ namespace Infiniminer
                                             Vector3 playerHeading = msgBuffer.ReadVector3();
                                             PlayerTools playerTool = (PlayerTools)msgBuffer.ReadByte();
                                             BlockType blockType = (BlockType)msgBuffer.ReadByte();
+                                            if (blockType >= BlockType.MAXIMUM)
+                                                break;
                                             switch (playerTool)
                                             {
                                                 case PlayerTools.Pickaxe:
@@ -622,6 +624,11 @@ namespace Infiniminer
                                                     break;
                                                 case PlayerTools.ConstructionGun:
                                                     UseConstructionGun(player, playerPosition, playerHeading, blockType);
+                                                    break;
+                                                case PlayerTools.WorldGun:
+                                                    if (player.SelectedClass != PlayerClass.Builder)
+                                                        break;
+                                                    UseConstructionGun(player, playerPosition, playerHeading, blockType, true);
                                                     break;
                                                 case PlayerTools.DeconstructionGun:
                                                     UseDeconstructionGun(player, playerPosition, playerHeading);
@@ -640,6 +647,8 @@ namespace Infiniminer
                                         {
                                             PlayerClass playerClass = (PlayerClass)msgBuffer.ReadByte();
                                             ConsoleWrite("SELECT_CLASS: " + player.Handle + ", " + playerClass.ToString());
+                                            player.SelectedClass = playerClass;
+                                            // Sınıfa göre sunucu tarafı limitleri
                                             switch (playerClass)
                                             {
                                                 case PlayerClass.Engineer:
@@ -657,6 +666,22 @@ namespace Infiniminer
                                                 case PlayerClass.Sapper:
                                                     player.OreMax = 200;
                                                     player.WeightMax = 4;
+                                                    break;
+                                                case PlayerClass.Scout:
+                                                    player.OreMax = 100;
+                                                    player.WeightMax = 4;
+                                                    break;
+                                                case PlayerClass.Hauler:
+                                                    player.OreMax = 500;
+                                                    player.WeightMax = 20;
+                                                    break;
+                                                case PlayerClass.Builder:
+                                                    player.OreMax = 400;
+                                                    player.WeightMax = 2;
+                                                    break;
+                                                case PlayerClass.Demolisher:
+                                                    player.OreMax = 300;
+                                                    player.WeightMax = 5;
                                                     break;
                                             }
                                             SendResourceUpdate(player);
@@ -1008,7 +1033,7 @@ namespace Infiniminer
         //    return false;
         //}
 
-        public void UseConstructionGun(ServerPlayer player, Vector3 playerPosition, Vector3 playerHeading, BlockType blockType)
+        public void UseConstructionGun(ServerPlayer player, Vector3 playerPosition, Vector3 playerHeading, BlockType blockType, bool free = false)
         {
             bool actionFailed = false;
 
@@ -1019,7 +1044,7 @@ namespace Infiniminer
                 actionFailed = true;
 
             // If the block is too expensive, bail.
-            uint blockCost = BlockInformation.GetCost(blockType);
+            uint blockCost = free ? 0 : BlockInformation.GetCost(blockType);
             if (config.SandboxMode && blockCost <= player.OreMax)
                 blockCost = 0;
             if (blockCost > player.Ore)

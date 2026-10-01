@@ -32,4 +32,6 @@ public enum PlayerTools
     DeconstructionGun,
     ProspectingRadar,
     Detonator,
+
+    WorldGun
 }

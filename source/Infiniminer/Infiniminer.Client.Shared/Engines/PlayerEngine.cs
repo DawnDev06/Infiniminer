@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ---------------------------------------------------------------------------- */
 
+using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -30,6 +31,9 @@ namespace Infiniminer
 {
     public class PlayerEngine
     {
+        public NetConnection NetConn;
+        public string IP;
+        public PlayerClass SelectedClass;
         InfiniminerGame gameInstance;
         PropertyBag _P;
 

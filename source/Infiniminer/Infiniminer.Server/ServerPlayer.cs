@@ -32,6 +32,7 @@ namespace Infiniminer
     {
         public NetConnection NetConn;
         public string IP;
+        public PlayerClass SelectedClass;
 
         public ServerPlayer(NetConnection netConn) : base()
         {

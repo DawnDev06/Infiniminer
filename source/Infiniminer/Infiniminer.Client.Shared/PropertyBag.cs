@@ -79,6 +79,15 @@ namespace Infiniminer
         public int playerToolSelected = 0;
         public BlockType[] playerBlocks = new BlockType[1] { BlockType.None };
         public int playerBlockSelected = 0;
+        public int worldGunBlockSelected = 0;
+
+        public BlockType GetWorldGunBlock()
+        {
+            int count = (int)BlockType.MAXIMUM;
+
+            worldGunBlockSelected = ((worldGunBlockSelected % count) + count) % count;
+            return (BlockType)worldGunBlockSelected;
+        }
         public PlayerTeam playerTeam = PlayerTeam.Red;
         public bool playerDead = true;
         public uint playerOre = 0;
@@ -385,46 +394,87 @@ namespace Infiniminer
             switch (playerClass)
             {
                 case PlayerClass.Prospector:
-                    playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
-                                                        PlayerTools.ConstructionGun,
-                                                        PlayerTools.ProspectingRadar     };
-                    playerBlocks = new BlockType[4] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
-                                                        BlockType.Ladder    };
+                    playerTools = new PlayerTools[3] { PlayerTools.Pickaxe,
+                                                       PlayerTools.ConstructionGun,
+                                                       PlayerTools.ProspectingRadar     };
+                    playerBlocks = new BlockType[4] {    playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                                                         playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
+                                                         playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
+                                                         BlockType.Ladder    };
+                    playerOreMax = 200; // Varsayılan
+                    playerWeightMax = 10;
                     break;
 
                 case PlayerClass.Miner:
-                    playerTools = new PlayerTools[2] {  PlayerTools.Pickaxe,
-                                                        PlayerTools.ConstructionGun     };
-                    playerBlocks = new BlockType[3] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
-                                                        BlockType.Ladder    };
+                    playerTools = new PlayerTools[2] { PlayerTools.Pickaxe,
+                                                       PlayerTools.ConstructionGun     };
+                    playerBlocks = new BlockType[3] {    playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                                                         playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
+                                                         BlockType.Ladder    };
+                    playerOreMax = 200;
+                    playerWeightMax = 10;
                     break;
 
                 case PlayerClass.Engineer:
-                    playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
-                                                        PlayerTools.ConstructionGun,
-                                                        PlayerTools.DeconstructionGun   };
-                    playerBlocks = new BlockType[9] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        BlockType.TransRed,
-                                                        BlockType.TransBlue,
-                                                        BlockType.Road,
-                                                        BlockType.Ladder,
-                                                        BlockType.Jump,
-                                                        BlockType.Shock,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.BankRed : BlockType.BankBlue  };
+                    playerTools = new PlayerTools[3] { PlayerTools.Pickaxe,
+                                                       PlayerTools.ConstructionGun,
+                                                       PlayerTools.DeconstructionGun   };
+                    playerBlocks = new BlockType[9] {    playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                                                         BlockType.TransRed,
+                                                         BlockType.TransBlue,
+                                                         BlockType.Road,
+                                                         BlockType.Ladder,
+                                                         BlockType.Jump,
+                                                         BlockType.Shock,
+                                                         playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
+                                                         playerTeam == PlayerTeam.Red ? BlockType.BankRed : BlockType.BankBlue  };
+                    playerOreMax = 200;
+                    playerWeightMax = 10;
                     break;
 
                 case PlayerClass.Sapper:
-                    playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
-                                                        PlayerTools.ConstructionGun,
-                                                        PlayerTools.Detonator     };
-                    playerBlocks = new BlockType[4] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
-                                                        BlockType.Ladder,
-                                                        BlockType.Explosive     };
+                    playerTools = new PlayerTools[3] { PlayerTools.Pickaxe,
+                                                       PlayerTools.ConstructionGun,
+                                                       PlayerTools.Detonator       };
+                    playerBlocks = new BlockType[4] {    playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                                                         playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
+                                                         BlockType.Ladder,
+                                                         BlockType.Explosive       };
+                    playerOreMax = 200;
+                    playerWeightMax = 10;
+                    break;
+
+                // --- YENİ EKLENEN SINIFLAR (Döküman Notları) ---
+                case PlayerClass.Scout:
+                    playerTools = new PlayerTools[2] { PlayerTools.Pickaxe, PlayerTools.ProspectingRadar };
+                    playerBlocks = new BlockType[2] { playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue, BlockType.Ladder };
+                    playerOreMax = 100;
+                    playerWeightMax = 5;
+                    break;
+
+                case PlayerClass.Hauler:
+                    playerTools = new PlayerTools[1] { PlayerTools.Pickaxe };
+                    playerBlocks = new BlockType[2] { playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue, BlockType.Road };
+                    playerOreMax = 500;
+                    playerWeightMax = 20;
+                    break;
+
+                case PlayerClass.Builder:
+                    playerTools = new PlayerTools[3] { PlayerTools.ConstructionGun, PlayerTools.DeconstructionGun, PlayerTools.WorldGun };
+                    playerBlocks = new BlockType[8] {
+                        playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                        BlockType.TransRed, BlockType.TransBlue, BlockType.Road, BlockType.Ladder, BlockType.Jump, BlockType.Shock,
+                        playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue
+                    };
+                    playerOreMax = 500;
+                    playerWeightMax = 5;
+                    break;
+
+                case PlayerClass.Demolisher:
+                    playerTools = new PlayerTools[2] { PlayerTools.Pickaxe, PlayerTools.Detonator };
+                    playerBlocks = new BlockType[2] { playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue, BlockType.Explosive };
+                    playerOreMax = 300;
+                    playerWeightMax = 5;
                     break;
             }
         }
@@ -569,15 +619,29 @@ namespace Infiniminer
         {
             switch (tool)
             {
-                case PlayerTools.Pickaxe: return 0.25f;
+                case PlayerTools.Pickaxe: return 0.1f;
                 case PlayerTools.Detonator: return 0.01f;
-                case PlayerTools.ConstructionGun: return 0.5f;
-                case PlayerTools.DeconstructionGun: return 0.5f;
-                case PlayerTools.ProspectingRadar: return 0.5f;
+                case PlayerTools.ConstructionGun: return 0.1f;
+                case PlayerTools.DeconstructionGun: return 0.1f;
+                case PlayerTools.ProspectingRadar: return 0.1f;
+                case PlayerTools.WorldGun: return 0.1f;
                 default: return 0;
             }
         }
+        public void FireWorldGun(BlockType blockType)
+        {
+            playerToolCooldown = GetToolCooldown(PlayerTools.WorldGun);
+            constructionGunAnimation = -5;
 
+            // Sunucuya WorldGun mesajını gönderiyoruz
+            NetBuffer msgBuffer = netClient.CreateBuffer();
+            msgBuffer.Write((byte)InfiniminerMessage.UseTool);
+            msgBuffer.Write(playerPosition);
+            msgBuffer.Write(playerCamera.GetLookVector());
+            msgBuffer.Write((byte)PlayerTools.WorldGun);
+            msgBuffer.Write((byte)blockType);
+            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+        }
         public void SendPlayerUpdate()
         {
             if (netClient.Status != NetConnectionStatus.Connected)

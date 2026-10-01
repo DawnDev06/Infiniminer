@@ -51,6 +51,7 @@ namespace Infiniminer
 
         public InfiniminerGame(string[] args)
         {
+            graphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
             this.Exiting += Game_OnExiting;
         }
         public string PlayerHandle { get { return playerHandle; } }

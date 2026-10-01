@@ -39,11 +39,18 @@ namespace Infiniminer.States
         Rectangle drawRect;
         string nextState = null;
 
-        ClickRegion[] clkClassMenu = new ClickRegion[4] {
-            new ClickRegion(new Rectangle(54,168,142,190), "miner"),
-            new ClickRegion(new Rectangle(300,169,142,190), "prospector"),
-            new ClickRegion(new Rectangle(580,170,133,187), "engineer"),
-            new ClickRegion(new Rectangle(819,172,133,190), "sapper")
+        // 8 sınıf için tıklama bölgeleri (İlk 4 üst sıra, son 4 alt sıra)
+        ClickRegion[] clkClassMenu = new ClickRegion[8] {
+            // Üst Sıra (Orijinal 4 Sınıf)
+            new ClickRegion(new Rectangle(54, 168, 142, 190), "miner"),
+            new ClickRegion(new Rectangle(300, 169, 142, 190), "prospector"),
+            new ClickRegion(new Rectangle(580, 170, 133, 187), "engineer"),
+            new ClickRegion(new Rectangle(819, 172, 133, 190), "sapper"),
+            // Alt Sıra (Yeni Eklenen 4 Sınıf: Scout, Hauler, Builder, Demolisher)[cite: 1]
+            new ClickRegion(new Rectangle(54, 400, 142, 190), "scout"),
+            new ClickRegion(new Rectangle(300, 400, 142, 190), "hauler"),
+            new ClickRegion(new Rectangle(580, 400, 133, 187), "builder"),
+            new ClickRegion(new Rectangle(819, 400, 133, 190), "demolisher")
         };
 
         int SelectionsCount { get { return clkClassMenu.Length; } }
@@ -76,7 +83,6 @@ namespace Infiniminer.States
         const float VAspect = (float)VWidth / (float)VHeight;
         private void UpdateUIViewport(Viewport viewport)
         {
-            // calculate virtual resolution
             float aspect = viewport.AspectRatio;
             float vWidth = (aspect > VAspect) ? (VHeight * aspect) : VWidth;
             float vHeight = (aspect < VAspect) ? (VWidth / aspect) : VHeight;
@@ -86,16 +92,14 @@ namespace Infiniminer.States
                                      1024,
                                      1024);
 
-            Matrix world = Matrix.CreateScale(1f, -1f, -1f) // Flip Y and Depth
-                         * Matrix.CreateTranslation(-vWidth / 2f, vHeight / 2f, 0f) // offset center
-                         * Matrix.CreateScale(1f / vWidth, 1f / vWidth, 1f); // normalize scale
+            Matrix world = Matrix.CreateScale(1f, -1f, -1f)
+                         * Matrix.CreateTranslation(-vWidth / 2f, vHeight / 2f, 0f)
+                         * Matrix.CreateScale(1f / vWidth, 1f / vWidth, 1f);
 
             if (_SM.propertyBag.playerCamera.UseVrCamera)
             {
-                float uiScale = 1f; // scale UI 1meter across.
+                float uiScale = 1f;
                 world *= Matrix.CreateScale(uiScale, uiScale, 1f);
-
-                // position UI panel
                 world *= Matrix.CreateTranslation(0.0f, 0.1f, -1.0f);
 
                 uiEffect.World = world;
@@ -105,10 +109,9 @@ namespace Infiniminer.States
             else
             {
                 float fov = MathHelper.ToRadians(70);
-                float uiScale = ((float)Math.Tan(fov * 0.5)) * aspect * 2f; // scale to fit nearPlane
+                float uiScale = ((float)Math.Tan(fov * 0.5)) * aspect * 2f;
                 world *= Matrix.CreateScale(uiScale, uiScale, 1f);
-
-                world *= Matrix.CreateTranslation(0.0f, 0.0f, -1.0f); // position to near plane
+                world *= Matrix.CreateTranslation(0.0f, 0.0f, -1.0f);
 
                 uiEffect.World = world;
                 uiEffect.View = Matrix.Identity;
@@ -123,7 +126,6 @@ namespace Infiniminer.States
 
         public override string OnUpdate(GameTime gameTime, KeyboardState keyState, MouseState mouseState)
         {
-            // Do network stuff.
             (_SM as InfiniminerGame).UpdateNetwork(gameTime);
 
             _P.skyplaneEngine.Update(gameTime);
@@ -159,7 +161,6 @@ namespace Infiniminer.States
 
         public override void OnRenderAtEnter(GraphicsDevice graphicsDevice)
         {
-
         }
 
         private void DrawSelection(SpriteBatch spriteBatch, GameTime gameTime)
@@ -192,15 +193,8 @@ namespace Infiniminer.States
             spriteBatch.End();
         }
 
-        public override void OnKeyDown(Keys key)
-        {
-
-        }
-
-        public override void OnKeyUp(Keys key)
-        {
-
-        }
+        public override void OnKeyDown(Keys key) { }
+        public override void OnKeyUp(Keys key) { }
 
         public override void OnMouseDown(MouseButton button, int x, int y)
         {
@@ -222,25 +216,32 @@ namespace Infiniminer.States
             {
                 case "miner":
                     _P.SetPlayerClass(PlayerClass.Miner);
-                    nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
-                    break;
-                case "engineer":
-                    _P.SetPlayerClass(PlayerClass.Engineer);
-                    nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
                     break;
                 case "prospector":
                     _P.SetPlayerClass(PlayerClass.Prospector);
-                    nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    break;
+                case "engineer":
+                    _P.SetPlayerClass(PlayerClass.Engineer);
                     break;
                 case "sapper":
                     _P.SetPlayerClass(PlayerClass.Sapper);
-                    nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    break;
+                case "scout":
+                    _P.SetPlayerClass(PlayerClass.Scout);
+                    break;
+                case "hauler":
+                    _P.SetPlayerClass(PlayerClass.Hauler);
+                    break;
+                case "builder":
+                    _P.SetPlayerClass(PlayerClass.Builder);
+                    break;
+                case "demolisher":
+                    _P.SetPlayerClass(PlayerClass.Demolisher);
                     break;
             }
+
+            nextState = "Infiniminer.States.MainGameState";
+            _P.PlaySound(InfiniminerSound.ClickHigh);
         }
 
         public override void OnMouseUp(MouseButton button, int x, int y)
@@ -248,7 +249,6 @@ namespace Infiniminer.States
             ScreenToUI(uiEffect, ref x, ref y);
             x -= drawRect.X;
             y -= drawRect.Y;
-
         }
 
         public override void OnMouseScroll(int scrollDelta)
@@ -281,16 +281,15 @@ namespace Infiniminer.States
             }
         }
 
-        // convert mouse screen position to UI world position
         private void ScreenToUI(IEffectMatrices matrices, ref int x, ref int y)
         {
             Viewport vp = _SM.GraphicsDevice.Viewport;
 
             Vector3 position3 = vp.Unproject(
-                            new Vector3(x, y, 0),
-                            matrices.Projection,
-                            matrices.View,
-                            matrices.World);
+                        new Vector3(x, y, 0),
+                        matrices.Projection,
+                        matrices.View,
+                        matrices.World);
 
             x = (int)position3.X;
             y = (int)position3.Y;

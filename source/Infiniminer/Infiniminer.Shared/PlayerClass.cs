@@ -30,5 +30,9 @@ public enum PlayerClass
     Prospector,
     Miner,
     Engineer,
-    Sapper
+    Sapper,
+    Scout,
+    Hauler,
+    Builder,
+    Demolisher
 }

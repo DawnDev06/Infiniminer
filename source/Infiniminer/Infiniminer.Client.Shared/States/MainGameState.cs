@@ -87,7 +87,6 @@ namespace Infiniminer.States
                 if (_P.playerToolCooldown <= 0)
                     _P.playerToolCooldown = 0;
             }
-
             ///////////////////////////////////////////////////////////////////
             /// Update the camera
             ///     Only update if the window has focus
@@ -148,7 +147,9 @@ namespace Infiniminer.States
                     ///////////////////////////////////////////////////////////////////
                     /// Use tool if player can
                     ///////////////////////////////////////////////////////////////////
-                    if (_P.playerToolCooldown == 0 && _P.inputEngine.UseTool.Check())
+                    bool isWorldGun = _P.playerTools[_P.playerToolSelected] == PlayerTools.WorldGun;
+                    bool wantsToUseTool = isWorldGun ? _P.inputEngine.UseTool.Pressed() : _P.inputEngine.UseTool.Check();
+                    if (_P.playerToolCooldown == 0 && wantsToUseTool)
                     {
                         switch (_P.playerTools[_P.playerToolSelected])
                         {
@@ -170,6 +171,9 @@ namespace Infiniminer.States
                                 break;
                             case PlayerTools.ProspectingRadar:
                                 _P.FireRadar();
+                                break;
+                            case PlayerTools.WorldGun:
+                                _P.FireWorldGun(_P.GetWorldGunBlock());
                                 break;
                         }
 
@@ -640,7 +644,21 @@ namespace Infiniminer.States
             if (_P.playerDead)
                 return;
 
-            if (scrollDelta == 120 && _P.playerTools[_P.playerToolSelected] == PlayerTools.ConstructionGun)
+            // 1. Durum: Elimizdeki araç DÜNYA TABANCASI ise tüm bloklar arasında gezin
+            if (_P.playerTools[_P.playerToolSelected] == PlayerTools.WorldGun)
+            {
+                int totalBlocks = (int)BlockType.MAXIMUM;
+                if (scrollDelta != 0)
+                {
+                    _P.PlaySound(InfiniminerSound.ClickLow);
+                    int step = scrollDelta > 0 ? 1 : -1;
+                    _P.worldGunBlockSelected = (_P.worldGunBlockSelected + step + totalBlocks) % totalBlocks;
+                }
+                return;
+            }
+
+            // 2. Durum: Normal İnşaat Tabancası (Mevcut Mantık)
+            if (scrollDelta > 0 && _P.playerTools[_P.playerToolSelected] == PlayerTools.ConstructionGun)
             {
                 _P.PlaySound(InfiniminerSound.ClickLow);
                 _P.playerBlockSelected += 1;
@@ -648,7 +666,7 @@ namespace Infiniminer.States
                     _P.playerBlockSelected = 0;
             }
 
-            if (scrollDelta == -120 && _P.playerTools[_P.playerToolSelected] == PlayerTools.ConstructionGun)
+            if (scrollDelta < 0 && _P.playerTools[_P.playerToolSelected] == PlayerTools.ConstructionGun)
             {
                 _P.PlaySound(InfiniminerSound.ClickLow);
                 _P.playerBlockSelected -= 1;

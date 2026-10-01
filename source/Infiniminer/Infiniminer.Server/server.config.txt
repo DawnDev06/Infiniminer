@@ -36,7 +36,7 @@ MapSize = 64
 #######################################################################
 ### The number of ore veins generated in the world.
 #######################################################################
-OreFactor = 10
+OreFactor = 60
 
 #######################################################################
 ### This flag specifies whether or not the generated world will include
@@ -53,4 +53,4 @@ WinningCashAmount = 10000
 ### This flag indicates if sandbox mode is enabled. When sandbox mode
 ### is enabled, all blocks will be free and the game will be unwinnable.
 #######################################################################
-SandboxMode = false
+SandboxMode = true
